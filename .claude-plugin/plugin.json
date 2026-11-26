@@ -1,0 +1,10 @@
+{
+  "name": "agent-demo-check",
+  "displayName": "Agent Demo Check",
+  "version": "0.1.0",
+  "description": "Check Python and JavaScript or TypeScript AI projects for common demo failures.",
+  "author": {
+    "name": "rodneyg"
+  },
+  "skills": "./"
+}
