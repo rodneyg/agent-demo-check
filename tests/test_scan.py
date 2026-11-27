@@ -121,7 +121,7 @@ class ScanTests(unittest.TestCase):
         self.assertEqual(0, run.returncode)
         self.assertIn('| high | no-timeout | agent.ts:2 |', run.stdout)
 
-    def test_tracked_env_ignore(self):
+    def test_tracked_env_is_reported_when_ignored(self):
         with tempfile.TemporaryDirectory(dir=ROOT) as tmp:
             p = Path(tmp)
             (p/'.git').mkdir()
@@ -129,7 +129,7 @@ class ScanTests(unittest.TestCase):
             (p/'.env').write_text('SECRET=fake')
             self.assertIn('committed-env', {f['id'] for f in scanner.scan(p)['findings']})
             (p/'.gitignore').write_text('.env\n')
-            self.assertNotIn('committed-env', {f['id'] for f in scanner.scan(p)['findings']})
+            self.assertIn('committed-env', {f['id'] for f in scanner.scan(p)['findings']})
 
 if __name__ == '__main__':
     unittest.main()

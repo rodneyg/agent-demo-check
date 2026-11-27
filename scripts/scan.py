@@ -2,7 +2,6 @@
 """Read-only, heuristic demo-readiness scan. Python standard library only."""
 import argparse
 import ast
-import fnmatch
 import json
 import os
 from pathlib import Path
@@ -225,20 +224,7 @@ def scan(repo):
         if p.name == '.env' or (p.name.startswith('.env.') and p.name != '.env.example'):
             rel = p.relative_to(repo).as_posix()
             tracked = b'\0' + rel.encode() + b'\0' in index_bytes or rel.encode() + b'\0' in index_bytes
-            ignored = False
-            for base in [repo] + [repo / Path(*p.relative_to(repo).parts[:i]) for i in range(1, len(p.relative_to(repo).parts))]:
-                ignore = base / '.gitignore'
-                if ignore.is_file():
-                    local = p.relative_to(base).as_posix()
-                    for rule in ignore.read_text(errors='replace').splitlines():
-                        rule = rule.strip()
-                        if not rule or rule.startswith('#'):
-                            continue
-                        negative = rule.startswith('!')
-                        rule = rule.lstrip('!').lstrip('/')
-                        if fnmatch.fnmatch(local, rule) or ('/' not in rule and fnmatch.fnmatch(p.name, rule)):
-                            ignored = not negative
-            if tracked and not ignored:
+            if tracked:
                 add('committed-env', 'high', p, 1, '[environment contents redacted]', 'A tracked environment file may expose secrets.', 'Remove secrets from the index, rotate exposed keys, and add an appropriate .gitignore rule.')
     return dict(repo=str(repo), files_scanned=len(sources), findings=findings, repo_findings=repo_findings)
 
