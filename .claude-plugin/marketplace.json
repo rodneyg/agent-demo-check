@@ -1,0 +1,13 @@
+{
+  "name": "agent-demo-check",
+  "owner": {
+    "name": "rodneyg"
+  },
+  "plugins": [
+    {
+      "name": "agent-demo-check",
+      "source": "./"
+    }
+  ],
+  "description": "Claude Code marketplace for Agent Demo Check."
+}
